@@ -1,22 +1,67 @@
-import { Canvas, useLoader } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+import { Canvas, useLoader, useThree } from "@react-three/fiber";
+import { OrbitControls, useHelper, PerspectiveCamera } from "@react-three/drei";
 import { GLTFLoader } from "three-stdlib";
 
-const Model = () => {
-  const glbPath = "/turtle.glb";
-  const { scene } = useLoader(GLTFLoader, glbPath);
-  console.log(scene);
+import * as THREE from "three";
+import { useEffect, useRef } from "react";
 
-  return <primitive object={scene} scale={1} />;
+const Model = () => {
+  const glbPath = "/JuneMimo2.glb";
+  const { scene } = useLoader(GLTFLoader, glbPath);
+  const meshRef = useRef<THREE.Object3D>(null);
+
+  useHelper(meshRef, THREE.BoxHelper, "cyan");
+
+  useEffect(() => {
+    if (meshRef.current) {
+      meshRef.current.add(scene);
+      // Center the model
+      const box = new THREE.Box3().setFromObject(scene);
+      const center = new THREE.Vector3();
+      box.getCenter(center);
+      scene.position.sub(center); // Center the model
+    }
+  }, [scene]);
+
+  return (
+    <primitive
+      object={scene}
+      scale={1}
+      ref={meshRef}
+      rotation={[(Math.PI / 180) * -2, 0, 0]}
+    />
+  );
 };
 
 const Scene = () => {
+  //const orbitRef = useRef(null);
+  const cameraRef = useRef();
+
   return (
     <Canvas>
-      <ambientLight intensity={2} />
+      <ambientLight intensity={6} />
       <spotLight position={[20, 20, 20]} angle={0.25} penumbra={1} />
+      <PerspectiveCamera
+        makeDefault
+        ref={cameraRef}
+        position={[10, 10, 10]}
+        fov={75}
+      />
       <Model />
-      <OrbitControls />
+      <OrbitControls
+        //ref={orbitRef}
+        //args={[camera, gl.domElement]}
+        enablePan={true}
+        enableRotate={true}
+        // maxPolarAngle={Math.PI / 2}
+        // minPolarAngle={0}
+        enableZoom={true}
+        minDistance={0.1} // Set to a very small value to allow close zoom
+        maxDistance={100}
+        enableDamping={true}
+        dampingFactor={0.5}
+        target={[0, 0, 0]} // Set the target to the center
+      />
     </Canvas>
   );
 };

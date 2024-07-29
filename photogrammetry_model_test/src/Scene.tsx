@@ -6,7 +6,7 @@ import * as THREE from "three";
 import { useEffect, useRef } from "react";
 
 const Model = () => {
-  const glbPath = "/JuneMimo2.glb";
+  const glbPath = "/JuneMimo.glb";
   const { scene } = useLoader(GLTFLoader, glbPath);
   const meshRef = useRef<THREE.Object3D>(null);
 

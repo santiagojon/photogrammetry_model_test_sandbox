@@ -49,18 +49,14 @@ const Scene = () => {
       />
       <Model />
       <OrbitControls
-        //ref={orbitRef}
-        //args={[camera, gl.domElement]}
         enablePan={true}
         enableRotate={true}
-        // maxPolarAngle={Math.PI / 2}
-        // minPolarAngle={0}
         enableZoom={true}
-        minDistance={0.1} // Set to a very small value to allow close zoom
+        minDistance={0.1}
         maxDistance={100}
         enableDamping={true}
         dampingFactor={0.5}
-        target={[0, 0, 0]} // Set the target to the center
+        target={[0, 0, 0]}
       />
     </Canvas>
   );
